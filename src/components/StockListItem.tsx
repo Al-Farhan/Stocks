@@ -1,9 +1,10 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { Text, View } from "./Themed";
 import { MonoText } from "./StyledText";
 import Colors from "../constants/Colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Link } from "expo-router";
 
 type Stock = {
   name: string;
@@ -19,7 +20,8 @@ type StockListItem = {
 const StockListItem = ({ stock }: StockListItem) => {
     const change = Number.parseFloat(stock.percent_change);
   return (
-    <View style={styles.container}>
+    <Link href={`/${stock.symbol}`} asChild>
+    <Pressable style={styles.container}>
         {/* Left container */}
       <View style={{ flex: 1, gap: 5 }}>
         <Text style={styles.symbol}>
@@ -36,7 +38,8 @@ const StockListItem = ({ stock }: StockListItem) => {
             {change.toFixed(2)}%
         </MonoText>
       </View>
-    </View>
+    </Pressable>
+    </Link>
   );
 };
 
