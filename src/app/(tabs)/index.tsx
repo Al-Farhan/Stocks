@@ -1,12 +1,39 @@
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 
 import { Text, View } from '@/src/components/Themed';
 import { Stack } from 'expo-router';
 import top5 from "@/assets/data/top5.json";
 import StockListItem from '@/src/components/StockListItem';
 
+import { useQuery, gql } from '@apollo/client';
+
+const query = gql`
+  query MyQuery($symbol: String = "AAPL") {
+  quotes(symbol: $symbol) {
+    value {
+      name
+      symbol
+      percent_change
+      close
+    }
+  }
+}
+`;
+
 export default function TabOneScreen() {
-  const stocks = Object.values(top5);
+  const { data, loading, error } = useQuery(query, {variables: {symbol: 'GOOG, AAPL, IBM, MSFT, META, NVDA, TSLA, AMZN'}});
+
+  if (loading) {
+    return <ActivityIndicator />
+  }
+
+  if (error) {
+    return <Text>Failed to fetch stocks</Text>
+  }
+
+  const stocks = data.quotes.map(q => q.value);
+  // console.log(JSON.stringify(stocks, null, 2));
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Stocks" }} />
