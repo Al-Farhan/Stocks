@@ -4,14 +4,41 @@ import { LineGraph, GraphPoint } from "react-native-graph";
 import timeseries from "@/assets/data/timeseries.json";
 import { MonoText } from "./StyledText";
 
-const Graph = () => {
+import { useQuery, gql } from "@apollo/client";
+import { ActivityIndicator } from "react-native";
 
-  const points: GraphPoint[] = timeseries.values.map((value) => ({
+const query = gql`
+  query MyQuery($interval: String, $symbol: String) {
+  time_series(symbol: $symbol, interval: $interval) {
+    values {
+      close
+      datetime
+    }
+  }
+}
+`
+
+const Graph = ({ symbol }: { symbol: string }) => {
+
+  const [selectedPoint, setSelectedPoint] = useState<GraphPoint>();
+
+  const { data, loading, error } = useQuery(query, {variables: {interval: '1day', symbol: symbol}});
+
+  if (loading) {
+    return <ActivityIndicator />
+  }
+
+  if (error) {
+    return <Text>Error getting stock details</Text>
+  }
+  
+
+  const points: GraphPoint[] = data.time_series.values.map((value) => ({
     date: new Date(value.datetime),
     value: Number.parseFloat(value.close),
   }));
   
-  const [selectedPoint, setSelectedPoint] = useState<GraphPoint>(points[points.length - 1]);
+  
 
   const onPointSelected = (point: GraphPoint) => {
     setSelectedPoint(point)
