@@ -41,7 +41,7 @@ type Query {
       configuration: "twelvedata"
     )
 
-  quoteS(symbol: String): [Quotes]
+  quotes(symbol: String): [Quotes]
     @rest(
       endpoint: "https://api.twelvedata.com/quote/"
       configuration: "twelvedata"
