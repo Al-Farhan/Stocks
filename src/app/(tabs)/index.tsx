@@ -20,7 +20,7 @@ const query = gql`
 `;
 
 export default function TabOneScreen() {
-  const { data, loading, error } = useQuery(query, {variables: {symbol: 'GOOG, AAPL, IBM, MSFT, META, NVDA, TSLA, AMZN'}});
+  const { data, loading, error } = useQuery(query, {variables: {symbol: 'AAPL, GOOG, MSFT, NVDA, AMZN'}});
 
   if (loading) {
     return <ActivityIndicator />
@@ -30,7 +30,7 @@ export default function TabOneScreen() {
     return <Text>Failed to fetch stocks</Text>
   }
 
-  const stocks = data.quotes.map(q => q.value);
+  const stocks = data?.quotes?.map((q: { value: any; }) => q.value);
   // console.log(JSON.stringify(stocks, null, 2));
 
   return (

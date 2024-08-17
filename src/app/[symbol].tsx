@@ -34,8 +34,6 @@ const StockDetails = () => {
 
   const stock = data.quote;
 
-  console.log(stock)
-
   return (
     <View>
       <Stack.Screen options={{ title: stock.symbol, headerBackTitleVisible: false }} />
